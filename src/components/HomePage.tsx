@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import About from "@/components/About";
+import CtaBand from "@/components/CtaBand";
 import FloatingContact from "@/components/FloatingContact";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -46,14 +48,16 @@ export default function HomePage({ packages }: HomePageProps) {
       <Header onGetQuote={openQuote} showPackagesLink={packages.length > 0} />
       <main>
         <Hero onGetQuote={openQuote} />
+        <About onGetQuote={openQuote} />
         <HeroGallery />
         <Services />
         <Packages packages={packages} onGetQuote={openQuote} />
         <HowItWorks />
         <TrackerBanner />
         <Testimonials />
+        <CtaBand onGetQuote={openQuote} />
       </main>
-      <Footer />
+      <Footer showPackagesLink={packages.length > 0} />
       <FloatingContact onGetQuote={openQuote} />
       <QuoteModal isOpen={isQuoteOpen} onClose={closeQuote} />
     </>

@@ -19,9 +19,9 @@ export default function Header({ onGetQuote, showPackagesLink }: HeaderProps) {
 
   const links = showPackagesLink
     ? [
-        ...navLinks.slice(0, 2),
+        ...navLinks.slice(0, 3),
         { label: "Packages", href: "#packages" },
-        ...navLinks.slice(2),
+        ...navLinks.slice(3),
       ]
     : navLinks;
 

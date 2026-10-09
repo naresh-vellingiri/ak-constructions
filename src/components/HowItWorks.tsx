@@ -3,57 +3,63 @@ const steps = [
     step: "01",
     title: "Free consultation",
     description:
-      "Share your floor plan, BHK, and budget. We understand your vision and site requirements.",
+      "Tell us about your plot or flat, your family's needs and your budget. We visit the site where needed to understand the space.",
   },
   {
     step: "02",
-    title: "Design & estimate",
+    title: "Design, estimate & approvals",
     description:
-      "Receive 3D designs and a transparent quote based on sq ft, materials, and scope of work.",
+      "Receive floor plans, 3D views and a transparent quote based on area, package and scope — and support with your building plan approval.",
   },
   {
     step: "03",
-    title: "Build & install",
+    title: "Build with live updates",
     description:
-      "Our team executes interiors or full construction with milestone updates and quality checks.",
+      "Our site team builds to the agreed specification while you follow each stage online and speak directly to your site engineer.",
   },
   {
     step: "04",
     title: "Handover",
     description:
-      "Final walkthrough, snag fixes, and warranty support — your dream home, ready to move in.",
+      "A final walkthrough and snag fixes before you move in — your home, ready to live in.",
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-stone-900 px-4 py-16 text-white lg:px-8">
+    <section
+      id="how-it-works"
+      className="bg-stone-900 px-4 py-16 text-white lg:px-8 lg:py-24"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-wider text-orange-400">
-            Process
+            Our process
           </p>
           <h2 className="mt-2 text-3xl font-bold md:text-4xl">
-            How AK Constructions works with you
+            From first call to handover
           </h2>
+          <p className="mt-4 text-lg text-stone-300">
+            Four clear steps, so you always know what happens next.
+          </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((item) => (
-            <article
+            <li
               key={item.step}
-              className="rounded-2xl border border-stone-700 bg-stone-800/50 p-6"
+              className="relative rounded-2xl border border-stone-700 bg-stone-800/60 p-7 transition hover:border-orange-500/60"
             >
-              <span className="text-3xl font-bold text-orange-400">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500 text-lg font-bold text-white">
                 {item.step}
               </span>
-              <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone-300">
+              <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-stone-300">
                 {item.description}
               </p>
-            </article>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

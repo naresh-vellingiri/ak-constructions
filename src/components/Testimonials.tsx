@@ -33,9 +33,6 @@ export default function Testimonials() {
           <h2 className="mt-2 text-3xl font-bold text-stone-900 md:text-4xl">
             What our clients say
           </h2>
-          <p className="mt-3 text-stone-600">
-            Replace with real client testimonials and Google review links.
-          </p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">

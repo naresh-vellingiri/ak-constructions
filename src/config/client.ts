@@ -35,9 +35,10 @@ export const clientConfig = {
 } as const;
 
 export const navLinks = [
-  { label: "Our Work", href: "#gallery" },
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#gallery" },
   { label: "Services", href: "#services" },
-  { label: "How It Works", href: "#how-it-works" },
+  { label: "Process", href: "#how-it-works" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
 ];

@@ -1,56 +1,20 @@
-const services = [
-  {
-    title: "Foyer Unit",
-    description:
-      "Make a lasting first impression with a stylish, functional foyer — shoe racks, mirrors, and storage that welcome guests beautifully.",
-    icon: "🪞",
-  },
-  {
-    title: "TV Unit",
-    description:
-      "Sleek, modern TV units with concealed wiring, display shelves, and designs that complement your living room layout.",
-    icon: "📺",
-  },
-  {
-    title: "Modular Kitchen",
-    description:
-      "Efficient, elegant kitchens tailored to your cooking style — parallel, L-shape, U-shape, and island layouts available.",
-    icon: "🍳",
-  },
-  {
-    title: "Wardrobe Designs",
-    description:
-      "Custom wardrobes with smart storage, premium finishes, and layouts designed for bedrooms of every size.",
-    icon: "👔",
-  },
-  {
-    title: "Full Home Interior",
-    description:
-      "End-to-end interior solutions for 2 BHK to villas — cohesive design across every room in your home.",
-    icon: "🏠",
-  },
-  {
-    title: "Home Construction",
-    description:
-      "New home construction with quality materials, transparent pricing, and project management from foundation to handover.",
-    icon: "🏗️",
-  },
-];
+import Icon from "@/components/icons";
+import { services } from "@/content/services";
 
 export default function Services() {
   return (
-    <section id="services" className="bg-white px-4 py-16 lg:px-8">
+    <section id="services" className="bg-white px-4 py-16 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-orange-600">
-            Our Services
+            What we do
           </p>
           <h2 className="mt-2 text-3xl font-bold text-stone-900 md:text-4xl">
-            Complete interior solutions, tailored for your dream home
+            Everything your home needs, from the plot to the last coat of paint
           </h2>
-          <p className="mt-4 text-stone-600">
-            From a single room makeover to full home construction — we handle
-            design, execution, and handover.
+          <p className="mt-4 text-lg text-stone-600">
+            Build a new home, renovate the one you have, or finish the interiors
+            of a new flat — one team and one point of contact throughout.
           </p>
         </div>
 
@@ -58,17 +22,33 @@ export default function Services() {
           {services.map((service) => (
             <article
               key={service.title}
-              className="rounded-2xl border border-stone-200 bg-stone-50 p-6 transition hover:border-orange-200 hover:shadow-md"
+              className="group flex flex-col rounded-2xl border border-stone-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
-                {service.icon}
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition group-hover:bg-orange-500 group-hover:text-white">
+                <Icon name={service.icon} className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-stone-900">
+
+              <h3 className="mt-5 text-xl font-bold text-stone-900">
                 {service.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-stone-600">
                 {service.description}
               </p>
+
+              <ul className="mt-5 space-y-2.5 border-t border-stone-100 pt-5">
+                {service.points.map((point) => (
+                  <li
+                    key={point}
+                    className="flex items-start gap-2.5 text-sm text-stone-700"
+                  >
+                    <Icon
+                      name="check"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-orange-500"
+                    />
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
