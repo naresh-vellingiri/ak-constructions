@@ -31,7 +31,13 @@ export default function Header({ onGetQuote, showPackagesLink }: HeaderProps) {
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 lg:px-8">
         <div className="min-w-0">
-          <a href="#" className="flex items-center gap-2.5 lg:gap-3">
+          {/* The visible text omits "AK" (the logo supplies it), so the link
+              carries the full name for screen readers. */}
+          <a
+            href="#"
+            aria-label={clientConfig.name}
+            className="flex items-center gap-2.5 lg:gap-3"
+          >
             {/* The client's logo file has a white background baked in (no alpha),
                 so mix-blend-multiply drops it out against the light header
                 instead of showing a white box over the blurred backdrop. */}
@@ -42,16 +48,20 @@ export default function Header({ onGetQuote, showPackagesLink }: HeaderProps) {
               aria-hidden="true"
               className="h-9 w-auto shrink-0 mix-blend-multiply lg:h-11"
             />
-            {/* One bold line, no tagline beneath: the full name is long enough
-                that the two stacked lines competed with each other, and the
-                tagline is already said in the hero. */}
-            <span className="min-w-0 truncate text-lg font-bold tracking-tight text-stone-900 sm:text-xl xl:whitespace-nowrap xl:text-lg 2xl:text-xl">
-              {clientConfig.name}
+            {/* No tagline beneath: it competed with the name, and the hero already
+                says it. On phones the text is allowed to wrap onto two lines
+                ("Construction and / Interiors") rather than being clipped; only
+                from the sm breakpoint up does it stay on one line. */}
+            <span className="min-w-0 text-base font-bold leading-tight tracking-tight text-stone-900 min-[400px]:text-lg sm:truncate sm:text-xl xl:whitespace-nowrap xl:text-lg">
+              {clientConfig.logoText}
             </span>
           </a>
         </div>
 
-        <nav className="hidden items-center gap-5 xl:flex 2xl:gap-6">
+        {/* No 2xl size or spacing step-up: the header content is capped at max-w-7xl,
+            so a larger font on a wider screen spends the same fixed width and
+            clips the brand text. */}
+        <nav className="hidden items-center gap-5 xl:flex">
           {links.map((link) => (
             <a
               key={link.label}

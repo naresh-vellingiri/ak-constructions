@@ -1,5 +1,13 @@
 export const clientConfig = {
   name: "AK Construction and Interiors",
+  /**
+   * The words shown next to the logo in the header. The logo image already
+   * carries the "AK" monogram, so repeating it in text reads "AK AK
+   * Construction..." and also pushes the name past the width available,
+   * clipping it. Everywhere else (hero, footer, page title, structured data)
+   * the full `name` is still used.
+   */
+  logoText: "Construction and Interiors",
   tagline: "Interior Design & Home Construction",
   description:
     "Complete interior solutions and home construction — from modular kitchens to full home builds.",
