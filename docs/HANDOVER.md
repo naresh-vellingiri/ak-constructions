@@ -112,8 +112,12 @@ Ordered by how much they matter.
    the one item that is a genuine legal exposure under Indian consumer
    advertising rules, not just untidy. Replace with real Google reviews or
    remove the section.
-2. **`clientConfig.email` is a personal Gmail** presented as the business
-   contact address in the public footer.
+2. **The business contact email is on Balaji's OLD domain**
+   (`contact@akbuildersandinteriors.com`, built by a third party in 2021). If that
+   domain or mailbox lapses, mail from the site's contact links stops arriving
+   with no error. Move it to an address on `akconstructionandinteriors.com`.
+   Separately, the WhatsApp links use the same number as the phone and it has not
+   been confirmed as a WhatsApp account — see `clientConfig.whatsapp`.
 3. **Test data is live in Supabase** — projects "Team Test", "Priya Sharma",
    "Saravanan", and a client account on 9700011122. Balaji sees these in
    `/admin`.

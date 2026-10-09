@@ -69,9 +69,10 @@ export const metadata: Metadata = {
  * and service area directly in results, and it is the on-site counterpart to the
  * Google Business Profile.
  *
- * Deliberately omits `aggregateRating` and `streetAddress`. A rating here with no
- * real reviews behind it is exactly what Google's spam policy targets, and a
- * guessed address would poison the map listing.
+ * Deliberately omits `aggregateRating`: a rating here with no real reviews behind
+ * it is exactly what Google's spam policy targets. The street address is
+ * included now that it is confirmed from the business's own published listing —
+ * it was left out earlier because a guessed one would poison the map listing.
  */
 const localBusinessSchema = {
   "@context": "https://schema.org",
@@ -85,7 +86,9 @@ const localBusinessSchema = {
   priceRange: `${rate}/sq ft`,
   address: {
     "@type": "PostalAddress",
+    streetAddress: `${clientConfig.address.street}, ${clientConfig.address.locality}`,
     addressLocality: clientConfig.city,
+    postalCode: clientConfig.address.postalCode,
     addressRegion: clientConfig.region,
     addressCountry: "IN",
   },

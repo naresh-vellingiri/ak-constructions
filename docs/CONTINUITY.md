@@ -286,8 +286,10 @@ customer, not technical debt:
    actually deliver.
 3. **The hero says "from ₹1,899/sq ft" while the cheapest package says
    ₹2,499.** Contradictory claims on one page; a customer will ask.
-4. **`clientConfig.email` is Naresh's personal Gmail**, shown publicly as AK's
-   business contact. This also has to change when the freelance engagement ends.
+4. **The contact email lives on Balaji's old domain** (`akbuildersandinteriors.com`),
+   not the new one. That domain is controlled by whoever built his 2021 site, so
+   the contact address depends on a third party. Create a mailbox on the new
+   domain and switch `clientConfig.email`.
 5. **`stats.clientRating` of 4.9★ is unverified**, which is why
    `aggregateRating` was deliberately left out of the structured data.
 6. **Test data is still in the database** — projects "Team Test", "Naresh",

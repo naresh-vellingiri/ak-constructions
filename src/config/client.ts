@@ -6,13 +6,30 @@ export const clientConfig = {
   ratePerSqFt: 1899,
   currency: "INR",
   currencySymbol: "₹",
-  phone: "+91 63834 34544",
-  whatsapp: "916383434544",
+  phone: "+91 98407 64744",
+  /**
+   * Same number as `phone`, in wa.me format (country code, no "+" or spaces).
+   * Confirmed as Balaji's business number from his existing site; it has NOT
+   * been confirmed as a WhatsApp account. If a WhatsApp tap ever lands on
+   * "isn't on WhatsApp", change only this line to the right number.
+   */
+  whatsapp: "919840764744",
   /** Dialling code, no "+". Prefixed to the 10 local digits admins type in. */
   phoneCountryCode: "91",
-  email: "nareshdev03@gmail.com",
+  /**
+   * Balaji's existing business address. Note it lives on his OLD domain
+   * (akbuildersandinteriors.com): if that domain or its mailbox lapses, mail
+   * sent from this site's contact links stops arriving, silently.
+   */
+  email: "contact@akbuildersandinteriors.com",
   city: "Chennai",
   region: "Tamil Nadu",
+  /** Office address, as published on Balaji's existing site. */
+  address: {
+    street: "Opposite to Capgemini, No 3/45, Rajiv Gandhi Salai",
+    locality: "Karapakkam",
+    postalCode: "600097",
+  },
   /**
    * Areas AK demonstrably has projects in. This is a public coverage claim and
    * it also drives the local-SEO keywords, so extend it only with areas Balaji

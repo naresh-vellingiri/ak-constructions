@@ -12,8 +12,10 @@ export type Service = {
  * so the two cannot drift apart.
  *
  * Every entry is a public claim about what the firm does. "Real estate" /
- * property sales is deliberately absent: nothing confirms AK sells property, and
- * it is one line to add here once Balaji says so.
+ * property sales is deliberately absent even though Balaji's old site lists it:
+ * brokering property in Tamil Nadu needs RERA registration, so that is his call
+ * to make explicitly rather than something to carry over from a template. It is
+ * one entry to add here once he confirms.
  *
  * The approvals entry is worded as support, "quoted separately", because the
  * published packages list building plan approval under "What's Not Included".
@@ -76,9 +78,9 @@ export const services: Service[] = [
   },
   {
     icon: "fileCheck",
-    title: "Building Plan Approvals",
+    title: "Building Plan & Land Approvals",
     description:
-      "Support with preparing and submitting your building plan, so paperwork doesn't delay the start of work.",
+      "Support with your building plan and land approvals, so paperwork doesn't delay the start of work.",
     points: [
       "Plan preparation and submission",
       "Guidance on the documents required",

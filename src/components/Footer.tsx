@@ -89,7 +89,8 @@ export default function Footer({ showPackagesLink }: FooterProps) {
             <li className="flex items-start gap-3">
               <Icon name="pin" className="mt-0.5 h-5 w-5 shrink-0 text-orange-400" />
               <span>
-                {clientConfig.city}, {clientConfig.region}
+                {clientConfig.address.street}, {clientConfig.address.locality},{" "}
+                {clientConfig.city} – {clientConfig.address.postalCode}
                 <span className="mt-1 block text-stone-500">
                   Serving {clientConfig.serviceAreas.join(", ")}
                 </span>
