@@ -41,6 +41,7 @@ login fails if you leave the production value in place.
 | `NEXTAUTH_SECRET` | Generate a new one. Every existing session is invalidated — everyone logs in again. Not fatal. |
 | `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH` | Generate a fresh bcrypt hash. See `docs/ADMIN-SETUP.md`. |
 | `NEXT_PUBLIC_GA_ID` | Cosmetic; analytics only. |
+| `NEXT_PUBLIC_GOOGLE_PLACES_KEY` | Optional. Without it the plot-location field suggests Chennai areas from a built-in list. See `docs/GOOGLE-PLACES-SETUP.md`. |
 
 Beware `$` in `.env.local`: Next.js runs values through dotenv-expand, so a
 bcrypt hash containing `$` gets mangled unless each one is escaped `\$`. This

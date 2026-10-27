@@ -118,9 +118,11 @@ export default function AdminLeadsPage() {
               </span>
             </div>
 
-            <p className="mt-3 text-sm font-semibold text-orange-600">
-              Est. {formatIndianCurrency(q.estimate)}
-            </p>
+            {q.estimate > 0 && (
+              <p className="mt-3 text-sm font-semibold text-orange-600">
+                Est. {formatIndianCurrency(q.estimate)}
+              </p>
+            )}
             <p className="mt-0.5 text-xs text-stone-400">
               {new Date(q.createdAt).toLocaleString("en-IN", {
                 dateStyle: "medium",

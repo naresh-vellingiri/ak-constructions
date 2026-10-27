@@ -33,6 +33,24 @@ export type QuoteRecord = {
 
 export type CreateQuoteInput = QuoteFormData & { estimate: number };
 
+/**
+ * Short three-field enquiry (name, mobile, plot location) from the second
+ * popup. No area, work type or estimate is collected, so the server fills those
+ * with neutral values and stamps the lead with QUICK_LEAD_LABEL in `workType`,
+ * which shows in the admin list so Balaji knows how the lead arrived and why
+ * the usual details are missing. Reusing that column avoids a schema change.
+ */
+export type QuickLeadInput = {
+  kind: "quick";
+  name: string;
+  phone: string;
+  location: string;
+  /** Honeypot: hidden from people, filled by bots. Must be empty. */
+  website?: string;
+};
+
+export const QUICK_LEAD_LABEL = "Quick callback request";
+
 export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = {
   new: "New",
   contacted: "Contacted",

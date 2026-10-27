@@ -9,12 +9,21 @@ import Hero from "@/components/Hero";
 import HeroGallery from "@/components/HeroGallery";
 import HowItWorks from "@/components/HowItWorks";
 import Packages from "@/components/Packages";
+import QuickLeadModal from "@/components/QuickLeadModal";
 import QuoteModal from "@/components/QuoteModal";
 import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
 import TrackerBanner from "@/components/TrackerBanner";
 import WhyUs from "@/components/WhyUs";
 import type { PublicPackage } from "@/types/package";
+
+/**
+ * Two popups, in order. The first automatic one is the full estimate form; every
+ * automatic one after it is the short three-field form, which is easier to fill
+ * in the second (and third...) time someone is interrupted. Opening the estimate
+ * form yourself from any "Get Quote" button counts as having seen the first.
+ */
+type Popup = "estimate" | "quick";
 
 /** First appearance, after the page has loaded. */
 const POPUP_FIRST_DELAY_MS = 2000;
@@ -34,9 +43,11 @@ type HomePageProps = {
 };
 
 export default function HomePage({ packages }: HomePageProps) {
-  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+  const [popup, setPopup] = useState<Popup | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasSubmitted = useRef(false);
+  /** How many popups have been shown automatically or opened by the visitor. */
+  const shownCount = useRef(0);
 
   const clearTimer = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
@@ -53,7 +64,8 @@ export default function HomePage({ packages }: HomePageProps) {
           timer.current = setTimeout(tick, POPUP_REPEAT_MS);
           return;
         }
-        setIsQuoteOpen(true);
+        setPopup(shownCount.current === 0 ? "estimate" : "quick");
+        shownCount.current += 1;
       };
 
       clearTimer();
@@ -66,11 +78,12 @@ export default function HomePage({ packages }: HomePageProps) {
   // was pending; closing it starts the ten-second countdown again.
   const openQuote = () => {
     clearTimer();
-    setIsQuoteOpen(true);
+    shownCount.current = Math.max(shownCount.current, 1);
+    setPopup("estimate");
   };
 
-  const closeQuote = () => {
-    setIsQuoteOpen(false);
+  const closePopup = () => {
+    setPopup(null);
     if (!hasSubmitted.current) scheduleOpen(POPUP_REPEAT_MS);
   };
 
@@ -119,8 +132,13 @@ export default function HomePage({ packages }: HomePageProps) {
       <Footer showPackagesLink={packages.length > 0} />
       <FloatingContact onGetQuote={openQuote} />
       <QuoteModal
-        isOpen={isQuoteOpen}
-        onClose={closeQuote}
+        isOpen={popup === "estimate"}
+        onClose={closePopup}
+        onSubmitted={handleSubmitted}
+      />
+      <QuickLeadModal
+        isOpen={popup === "quick"}
+        onClose={closePopup}
         onSubmitted={handleSubmitted}
       />
     </>
