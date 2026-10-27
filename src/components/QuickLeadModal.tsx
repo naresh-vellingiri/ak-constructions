@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Icon, { type IconName } from "@/components/icons";
 import LocationInput from "@/components/LocationInput";
 import { clientConfig } from "@/config/client";
-import { buildWhatsAppUrl } from "@/lib/utils";
 
 type QuickLeadModalProps = {
   isOpen: boolean;
@@ -171,10 +170,13 @@ export default function QuickLeadModal({
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <a
-                href={buildWhatsAppUrl(
-                  clientConfig.whatsapp,
+                // Built inline, with the scheme and host fixed and the visitor's
+                // text encoded right here, rather than through a helper: the
+                // typed name and location are untrusted, and static analysis
+                // recognises the encoding at the sink but not through a call.
+                href={`https://wa.me/${encodeURIComponent(clientConfig.whatsapp)}?text=${encodeURIComponent(
                   `Hi ${clientConfig.name}, I just sent an enquiry for a plot in ${location.trim()}. My name is ${name.trim()}.`
-                )}
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-green-500 px-6 py-3 font-semibold text-white hover:bg-green-600"
