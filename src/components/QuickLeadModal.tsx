@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Icon, { type IconName } from "@/components/icons";
 import LocationInput from "@/components/LocationInput";
 import { clientConfig } from "@/config/client";
+import { buildWhatsAppUrl } from "@/lib/utils";
 
 type QuickLeadModalProps = {
   isOpen: boolean;
@@ -11,6 +12,9 @@ type QuickLeadModalProps = {
   /** Fired once a lead has actually been saved, so the page can stop re-opening popups. */
   onSubmitted?: () => void;
 };
+
+/** Fixed text for the "Chat on WhatsApp" button; see the note at the link. */
+const WHATSAPP_MESSAGE = `Hi ${clientConfig.name}, I just sent an enquiry on your website. Could we talk about my plot?`;
 
 type Errors = { name?: string; phone?: string; location?: string; form?: string };
 
@@ -170,13 +174,13 @@ export default function QuickLeadModal({
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <a
-                // Built inline, with the scheme and host fixed and the visitor's
-                // text encoded right here, rather than through a helper: the
-                // typed name and location are untrusted, and static analysis
-                // recognises the encoding at the sink but not through a call.
-                href={`https://wa.me/${encodeURIComponent(clientConfig.whatsapp)}?text=${encodeURIComponent(
-                  `Hi ${clientConfig.name}, I just sent an enquiry for a plot in ${location.trim()}. My name is ${name.trim()}.`
-                )}`}
+                // Nothing the visitor typed goes into this URL. The message is
+                // fixed because AK already has their name, number and plot
+                // location from the saved enquiry, and the chat opens from
+                // their own number. That also keeps free text, which cannot be
+                // reduced to a safe character set the way a phone number can,
+                // out of a link entirely.
+                href={buildWhatsAppUrl(clientConfig.whatsapp, WHATSAPP_MESSAGE)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-green-500 px-6 py-3 font-semibold text-white hover:bg-green-600"
