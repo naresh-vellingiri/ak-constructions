@@ -4,21 +4,22 @@ import { useEffect, useMemo, useState } from "react";
 import {
   bhkOptions,
   clientConfig,
-  rateByWorkType,
   timelineOptions,
   workTypes,
-  type WorkType,
 } from "@/config/client";
+import { estimateQuote } from "@/lib/estimate";
 import {
   buildWhatsAppUrl,
-  calculateQuoteEstimate,
   formatIndianCurrency,
+  formatLakhs,
 } from "@/lib/utils";
 import type { QuoteFormData, QuoteFormErrors } from "@/types/quote";
 
 type QuoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  /** Fired once a lead has actually been saved, so the page can stop re-opening this. */
+  onSubmitted?: () => void;
 };
 
 const initialForm: QuoteFormData = {
@@ -48,22 +49,19 @@ function validateForm(data: QuoteFormData): QuoteFormErrors {
   return errors;
 }
 
-export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
+export default function QuoteModal({ isOpen, onClose, onSubmitted }: QuoteModalProps) {
   const [form, setForm] = useState<QuoteFormData>(initialForm);
   const [errors, setErrors] = useState<QuoteFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Rate follows the selected work type. null means AK has no published rate
-  // for that kind of work, in which case we offer a site visit rather than
-  // showing a number — previously every work type reused the combined rate, so
-  // an interior-only enquiry was quoted as though it included construction.
-  const rate = rateByWorkType[form.workType as WorkType] ?? null;
-
-  const estimate = useMemo(
-    () => (rate === null ? 0 : calculateQuoteEstimate(form.sqFt, rate)),
-    [form.sqFt, rate]
+  // Recomputed when either the work type or the area changes. The old version
+  // depended on area alone, so switching work type never updated the figure.
+  const quote = useMemo(
+    () => estimateQuote(form.workType, form.sqFt),
+    [form.workType, form.sqFt]
   );
+  const estimate = quote.total;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -116,6 +114,7 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
       }
 
       setIsSubmitted(true);
+      onSubmitted?.();
     } catch {
       setErrors({
         name: "Could not submit right now. Please call or WhatsApp us directly.",
@@ -132,7 +131,7 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     `Work: ${form.workType}\n` +
     `BHK: ${form.bhk}\n` +
     `Area: ${form.sqFt} sq ft\n` +
-    (estimate > 0 ? `Estimate: ${formatIndianCurrency(estimate)}\n` : "") +
+    (estimate > 0 ? `Estimate: from ${formatIndianCurrency(estimate)}\n` : "") +
     `Name: ${form.name}\n` +
     `Phone: ${form.phone}`;
 
@@ -174,7 +173,7 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
             </p>
             {estimate > 0 && (
               <p className="mt-4 text-lg font-semibold text-orange-600">
-                Indicative estimate: {formatIndianCurrency(estimate)}
+                Indicative estimate: from {formatIndianCurrency(estimate)}
               </p>
             )}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -208,44 +207,53 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                 Get your home estimate in minutes
               </h2>
               <p className="mt-4 text-stone-200">
-                Starting from{" "}
+                Turnkey construction from{" "}
                 <span className="font-bold text-white">
-                  {formatIndianCurrency(clientConfig.ratePerSqFt)}/sq ft
-                </span>{" "}
-                for interior & construction packages.
+                  {formatIndianCurrency(clientConfig.pricing.turnkeyPerSqFt)}/sq ft
+                </span>
+                . Custom interiors from{" "}
+                <span className="font-bold text-white">
+                  {formatLakhs(clientConfig.pricing.interiorStartsFrom)}
+                </span>
+                .
               </p>
 
               <div className="mt-8 rounded-2xl bg-white/10 p-6 backdrop-blur">
                 <p className="text-sm text-stone-300">Live estimate</p>
+                <p className="mt-2 text-4xl font-bold">
+                  {estimate > 0 ? (
+                    <>
+                      <span className="mr-2 text-lg font-medium text-stone-300">
+                        from
+                      </span>
+                      {formatIndianCurrency(estimate)}
+                    </>
+                  ) : (
+                    "—"
+                  )}
+                </p>
 
-                {rate === null ? (
-                  <>
-                    <p className="mt-2 text-2xl font-bold leading-snug">
-                      Quoted after a site visit
-                    </p>
-                    <p className="mt-3 text-sm leading-relaxed text-stone-300">
-                      {form.workType} is priced on scope rather than a flat
-                      rate. Send your details and we&apos;ll come back with a
-                      figure.
-                    </p>
-                  </>
+                {quote.lines.length > 0 ? (
+                  <ul className="mt-4 space-y-2 border-t border-white/15 pt-4 text-sm text-stone-300">
+                    {quote.lines.map((line) => (
+                      <li key={line.label} className="flex justify-between gap-4">
+                        <span>{line.label}</span>
+                        <span className="shrink-0 font-medium text-white">
+                          {line.value}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 ) : (
-                  <>
-                    <p className="mt-2 text-4xl font-bold">
-                      {estimate > 0 ? formatIndianCurrency(estimate) : "—"}
-                    </p>
-                    {form.sqFt > 0 && (
-                      <p className="mt-2 text-sm text-stone-300">
-                        {form.sqFt.toLocaleString("en-IN")} sq ft ×{" "}
-                        {formatIndianCurrency(rate)}
-                      </p>
-                    )}
-                    <p className="mt-4 text-xs leading-relaxed text-stone-400">
-                      Indicative pricing only. Final quote depends on materials,
-                      design scope, and site visit.
-                    </p>
-                  </>
+                  <p className="mt-3 text-sm text-stone-300">
+                    Enter your carpet area to see an estimate.
+                  </p>
                 )}
+
+                <p className="mt-4 text-xs leading-relaxed text-stone-400">
+                  Starting figures only. Final quote depends on materials,
+                  design scope, and site visit.
+                </p>
               </div>
             </div>
 
@@ -370,17 +378,20 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
 
               <div className="mt-4 rounded-xl bg-orange-50 p-4 md:hidden">
                 <p className="text-sm text-stone-600">Indicative estimate</p>
-                {rate === null ? (
-                  <p className="text-base font-semibold leading-snug text-orange-600">
-                    Quoted after a site visit — send your details and we&apos;ll
-                    come back with a figure.
-                  </p>
-                ) : (
-                  <p className="text-2xl font-bold text-orange-600">
-                    {estimate > 0
-                      ? formatIndianCurrency(estimate)
-                      : "Enter sq ft to calculate"}
-                  </p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {estimate > 0
+                    ? `from ${formatIndianCurrency(estimate)}`
+                    : "Enter sq ft to calculate"}
+                </p>
+                {quote.lines.length > 1 && (
+                  <ul className="mt-2 space-y-1 text-xs text-stone-600">
+                    {quote.lines.map((line) => (
+                      <li key={line.label} className="flex justify-between gap-3">
+                        <span>{line.label}</span>
+                        <span className="shrink-0 font-medium">{line.value}</span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
 

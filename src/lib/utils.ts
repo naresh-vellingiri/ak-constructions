@@ -2,6 +2,12 @@ export function formatIndianCurrency(amount: number, symbol = "₹"): string {
   return `${symbol}${amount.toLocaleString("en-IN")}`;
 }
 
+/** 175000 -> "₹1.75 lakhs". Prices in India are quoted in lakhs, not thousands. */
+export function formatLakhs(amount: number, symbol = "₹"): string {
+  const lakhs = Math.round((amount / 100000) * 100) / 100;
+  return `${symbol}${lakhs} ${lakhs === 1 ? "lakh" : "lakhs"}`;
+}
+
 export function calculateQuoteEstimate(sqFt: number, ratePerSqFt: number): number {
   if (sqFt <= 0 || ratePerSqFt <= 0) return 0;
   return sqFt * ratePerSqFt;

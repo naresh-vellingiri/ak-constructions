@@ -25,7 +25,7 @@ now and add the rest later without anything looking broken.
 ## Two things to settle first
 
 **1. How many packages?**
-AK currently quotes a single rate, ₹1,899/sq ft. The layout adapts on its own —
+AK advertises turnkey construction from ₹1,950/sq ft (`clientConfig.pricing`). The layout adapts on its own —
 one package renders as a single card, two side by side, three in a row — so this
 is purely Balaji's commercial call, not a design constraint any more. If he wants
 tiers, the higher ones need genuinely better materials, not just a higher number.

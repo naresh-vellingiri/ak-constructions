@@ -1,76 +1,44 @@
 import Link from "next/link";
-import { clientConfig } from "@/config/client";
-import { STAGE_TEMPLATE } from "@/config/stages";
+import Icon from "@/components/icons";
 
 /**
  * Homepage banner advertising the client progress tracker.
  *
- * The phone mockup is rendered from the same STAGE_TEMPLATE the real tracker
- * uses, rather than being a screenshot. That way it can't drift out of sync with
- * the actual product, and there's no image to re-export when stages change.
+ * The phone is an AK-branded illustration supplied by the client, cropped to
+ * just the handset (its original caption repeated this section's heading, and
+ * said "APP" next to a bullet that says no app is needed).
+ *
+ * It is an illustration, not a screenshot of the live tracker. It shows tabs
+ * the tracker does not have yet (site photos, finalized designs, material
+ * selection) and a "days left" badge, so the copy beside it must only promise
+ * what the real tracker does — stage progress and the site-engineer contact.
  */
-export default function TrackerBanner() {
-  // First few stages, with the first two shown complete to imply progress.
-  const previewStages = STAGE_TEMPLATE.slice(0, 5);
+const benefits = [
+  "See your current stage and overall progress at a glance",
+  "Every stage from foundation to handover, ticked off as it's done",
+  "Your site engineer's name and number, one tap to call",
+  "No app to install — opens in your phone's browser",
+];
 
+export default function TrackerBanner() {
   return (
     <section id="tracker" className="bg-stone-900 px-4 py-16 text-white lg:px-8 lg:py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-12 md:grid-cols-2">
-        {/* Phone mockup */}
-        <div className="flex justify-center md:order-2">
-          <div className="w-full max-w-[280px] rounded-[2.5rem] border-4 border-stone-700 bg-stone-950 p-3 shadow-2xl">
-            <div className="overflow-hidden rounded-[1.8rem] bg-stone-50 text-stone-900">
-              <div className="flex items-center justify-between bg-orange-500 px-4 py-3 text-white">
-                <span className="text-xs font-bold">{clientConfig.name}</span>
-                <span className="rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-semibold">
-                  On Schedule
-                </span>
-              </div>
-
-              <div className="px-4 py-3">
-                <p className="text-[11px] text-stone-500">Your project</p>
-                <p className="text-sm font-bold">1,800 sq ft · G+1</p>
-
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-stone-200">
-                  <div className="h-full w-[40%] rounded-full bg-orange-500" />
-                </div>
-                <p className="mt-1 text-[10px] text-stone-400">40% complete</p>
-
-                <ul className="mt-3 space-y-1.5 pb-2">
-                  {previewStages.map((stage, i) => {
-                    const done = i < 2;
-                    return (
-                      <li
-                        key={stage.key}
-                        className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 ${
-                          done
-                            ? "border-green-200 bg-green-50"
-                            : "border-stone-200 bg-white"
-                        }`}
-                      >
-                        <span
-                          className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${
-                            done
-                              ? "bg-green-500 text-white"
-                              : "bg-stone-200 text-stone-500"
-                          }`}
-                        >
-                          {done ? "✓" : i + 1}
-                        </span>
-                        <span
-                          className={`truncate text-[10px] font-medium ${
-                            done ? "text-green-800" : "text-stone-600"
-                          }`}
-                        >
-                          {stage.label}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
+        {/* Phone illustration */}
+        <div className="relative mx-auto w-full max-w-md md:order-2 md:max-w-none">
+          <div
+            aria-hidden="true"
+            className="absolute -inset-3 rounded-[2.5rem] bg-orange-500/25 blur-2xl"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/tracker-app.webp"
+            alt="AK Construction and Interiors project tracker on a phone, showing the current construction stage, a progress bar and a timeline of completed stages"
+            width={980}
+            height={965}
+            loading="lazy"
+            className="relative w-full rounded-3xl shadow-2xl ring-1 ring-white/15"
+          />
         </div>
 
         {/* Copy */}
@@ -88,19 +56,16 @@ export default function TrackerBanner() {
             the work happens.
           </p>
 
-          <ul className="mt-6 space-y-2.5 text-stone-300">
-            <li className="flex gap-3">
-              <span className="text-orange-400">✓</span>
-              Every stage from foundation to handover, ticked off as it&apos;s done
-            </li>
-            <li className="flex gap-3">
-              <span className="text-orange-400">✓</span>
-              Your site engineer&apos;s name and number, one tap to call
-            </li>
-            <li className="flex gap-3">
-              <span className="text-orange-400">✓</span>
-              No app to install — works in your phone&apos;s browser
-            </li>
+          <ul className="mt-6 space-y-3 text-stone-300">
+            {benefits.map((benefit) => (
+              <li key={benefit} className="flex items-start gap-3">
+                <Icon
+                  name="check"
+                  className="mt-0.5 h-5 w-5 shrink-0 text-orange-400"
+                />
+                {benefit}
+              </li>
+            ))}
           </ul>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">

@@ -284,8 +284,11 @@ customer, not technical debt:
    They are now public promises about what AK supplies — brands, TMT grades,
    concrete mixes, all checkable on site. Balaji must confirm every line he can
    actually deliver.
-3. **The hero says "from ₹1,899/sq ft" while the cheapest package says
-   ₹2,499.** Contradictory claims on one page; a customer will ask.
+3. **The hero says turnkey construction "starts from ₹1,950/sq ft" while the
+   cheapest published package is ₹2,499.** Nothing on the page is priced at
+   ₹1,950, so a customer will ask what that figure buys. Either publish a package
+   at that price or word the hero as "from" the package rate. The advertised
+   prices live in one place, `clientConfig.pricing`.
 4. **The contact email lives on Balaji's old domain** (`akbuildersandinteriors.com`),
    not the new one. That domain is controlled by whoever built his 2021 site, so
    the contact address depends on a third party. Create a mailbox on the new

@@ -10,7 +10,7 @@ type FooterProps = {
 
 export default function Footer({ showPackagesLink }: FooterProps) {
   const explore = [
-    { label: "About us", href: "#about" },
+    { label: "Why us", href: "#why-us" },
     { label: "Our projects", href: "#gallery" },
     { label: "Services", href: "#services" },
     ...(showPackagesLink ? [{ label: "Packages", href: "#packages" }] : []),

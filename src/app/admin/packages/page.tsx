@@ -38,7 +38,7 @@ export default function AdminPackagesPage() {
       return;
     }
     if (!Number.isFinite(rateValue) || rateValue <= 0) {
-      setFormError("Enter the rate per sq ft, e.g. 1899.");
+      setFormError("Enter the rate per sq ft, e.g. 2499.");
       return;
     }
 
@@ -103,7 +103,7 @@ export default function AdminPackagesPage() {
             value={rate}
             onChange={(e) => setRate(e.target.value)}
             inputMode="numeric"
-            placeholder="Rate per sq ft, e.g. 1899"
+            placeholder="Rate per sq ft, e.g. 2499"
             className="rounded-xl border border-stone-300 px-4 py-2.5 text-sm"
           />
         </div>

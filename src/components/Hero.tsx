@@ -1,7 +1,8 @@
 import HeroCarousel from "@/components/HeroCarousel";
 import { clientConfig } from "@/config/client";
 import { heroSlides } from "@/content/projects";
-import { formatIndianCurrency } from "@/lib/utils";
+import Icon from "@/components/icons";
+import { formatIndianCurrency, formatLakhs } from "@/lib/utils";
 
 type HeroProps = {
   onGetQuote: () => void;
@@ -15,20 +16,40 @@ export default function Hero({ onGetQuote }: HeroProps) {
       {/* pb accounts for the carousel dots so they never overlap the stats */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-16 pb-24 lg:px-8 lg:py-24 lg:pb-28">
         <div className="max-w-2xl">
-          <p className="inline-flex rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-1 text-sm font-medium text-orange-200 backdrop-blur-sm">
+          <p className="inline-flex rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-orange-200 backdrop-blur-sm sm:text-sm">
             {clientConfig.tagline}
           </p>
           <h1 className="mt-6 text-4xl font-bold leading-tight drop-shadow-lg md:text-5xl lg:text-6xl">
             Build your dream home with{" "}
             <span className="text-orange-400">{clientConfig.name}</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-stone-200 drop-shadow">
-            {clientConfig.description} Packages starting from{" "}
-            <strong className="text-white">
-              {formatIndianCurrency(clientConfig.ratePerSqFt)}/sq ft
-            </strong>
-            .
-          </p>
+          <ul className="mt-6 max-w-xl space-y-3 text-lg text-stone-100 drop-shadow">
+            <li className="flex items-start gap-3">
+              <Icon
+                name="check"
+                className="mt-1 h-5 w-5 shrink-0 text-orange-400"
+              />
+              <span>
+                Turnkey construction starts from{" "}
+                <strong className="whitespace-nowrap text-white">
+                  {formatIndianCurrency(clientConfig.pricing.turnkeyPerSqFt)} per
+                  sq ft
+                </strong>
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Icon
+                name="check"
+                className="mt-1 h-5 w-5 shrink-0 text-orange-400"
+              />
+              <span>
+                Custom interiors start from just{" "}
+                <strong className="whitespace-nowrap text-white">
+                  {formatLakhs(clientConfig.pricing.interiorStartsFrom)}
+                </strong>
+              </span>
+            </li>
+          </ul>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <button

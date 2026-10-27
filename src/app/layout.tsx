@@ -3,14 +3,15 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { clientConfig } from "@/config/client";
-import { formatIndianCurrency } from "@/lib/utils";
+import { formatIndianCurrency, formatLakhs } from "@/lib/utils";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-const rate = formatIndianCurrency(clientConfig.ratePerSqFt);
+const turnkey = `${formatIndianCurrency(clientConfig.pricing.turnkeyPerSqFt)}/sq ft`;
+const interiors = formatLakhs(clientConfig.pricing.interiorStartsFrom);
 const areas = clientConfig.serviceAreas.join(", ");
 // Absolute, not "/images/og-image.jpg". A relative value is resolved against
 // metadataBase, which the dev server rewrites to localhost — and a localhost
@@ -33,9 +34,8 @@ export const metadata: Metadata = {
     template: `%s | ${clientConfig.name} ${clientConfig.city}`,
   },
   description:
-    `${clientConfig.name} builds homes and designs interiors in ${clientConfig.city} from ` +
-    `${rate}/sq ft — modular kitchens, wardrobes and full home builds. ` +
-    `Serving ${areas}. Track your site progress online.`,
+    `Turnkey home construction from ${turnkey} and custom interiors from ${interiors} ` +
+    `in ${clientConfig.city}. Serving ${areas}.`,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     url: clientConfig.siteUrl,
     siteName: clientConfig.name,
     title: `${clientConfig.name} | Home Construction & Interior Design in ${clientConfig.city}`,
-    description: `Homes built and interiors designed in ${clientConfig.city} from ${rate}/sq ft. Serving ${areas}.`,
+    description: `Turnkey construction from ${turnkey}. Custom interiors from ${interiors}. Serving ${areas}.`,
     // JPEG, not the WebP the gallery uses: WhatsApp and Facebook link scrapers
     // are unreliable with WebP, and WhatsApp is how this business shares links.
     images: [
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `${clientConfig.name} | ${clientConfig.city}`,
-    description: `Home construction and interior design in ${clientConfig.city} from ${rate}/sq ft.`,
+    description: `Turnkey construction from ${turnkey}. Custom interiors from ${interiors}.`,
     images: [ogImage],
   },
   robots: { index: true, follow: true },
@@ -83,7 +83,7 @@ const localBusinessSchema = {
   telephone: clientConfig.phone,
   image: ogImage,
   logo: `${clientConfig.siteUrl}/images/ak-logo.webp`,
-  priceRange: `${rate}/sq ft`,
+  priceRange: `From ${turnkey}`,
   address: {
     "@type": "PostalAddress",
     streetAddress: `${clientConfig.address.street}, ${clientConfig.address.locality}`,

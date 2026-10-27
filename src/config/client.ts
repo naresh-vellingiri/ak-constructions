@@ -8,10 +8,21 @@ export const clientConfig = {
    * the full `name` is still used.
    */
   logoText: "Construction and Interiors",
-  tagline: "Interior Design & Home Construction",
+  tagline: "Home Construction & Interior Design",
   description:
     "Complete interior solutions and home construction — from modular kitchens to full home builds.",
-  ratePerSqFt: 1899,
+  /**
+   * The "starts from" prices advertised across the site: hero, quote form,
+   * search-result description and structured data all read these, so a price
+   * change is one edit here and the site cannot show two different figures.
+   *
+   * These are starting points, not quotes. Turnkey construction is priced per
+   * sq ft; custom interiors are a flat starting budget, not a per-sq-ft rate.
+   */
+  pricing: {
+    turnkeyPerSqFt: 1950,
+    interiorStartsFrom: 175000,
+  },
   currency: "INR",
   currencySymbol: "₹",
   phone: "+91 98407 64744",
@@ -60,7 +71,7 @@ export const clientConfig = {
 } as const;
 
 export const navLinks = [
-  { label: "About", href: "#about" },
+  { label: "Why Us", href: "#why-us" },
   { label: "Projects", href: "#gallery" },
   { label: "Services", href: "#services" },
   { label: "Process", href: "#how-it-works" },
@@ -91,25 +102,3 @@ export const workTypes = [
 ] as const;
 
 export type WorkType = (typeof workTypes)[number];
-
-/**
- * Rate per sq ft for each kind of work, driving the quote form's live estimate.
- *
- * `null` means "no published rate": the form then offers a site visit instead of
- * a number, which is the honest answer and still captures the lead.
- *
- * Only the combined rate is AK's actual published figure — it is the same
- * ₹1,899 shown in the hero. **The other two have to come from Balaji.** A
- * plausible-looking number invented here is a price a customer reads, believes,
- * and plans a budget around, so it stays null until he supplies it.
- *
- * Note the combined rate currently undercuts the cheapest published
- * construction package (₹2,499, see /admin/packages). That contradiction is
- * Balaji's to resolve on the commercial side — do not paper over it by guessing
- * a construction-only rate here.
- */
-export const rateByWorkType: Record<WorkType, number | null> = {
-  "Interior Design Only": null,
-  "Construction Only": null,
-  "Interior + Construction": clientConfig.ratePerSqFt,
-};
