@@ -1,16 +1,19 @@
 import { redirect } from "next/navigation";
 import SignOutButton from "@/app/track/SignOutButton";
+import ClientFiles from "@/components/ClientFiles";
 import StageChecklist from "@/components/StageChecklist";
 import StatusBadge from "@/components/StatusBadge";
 import TeamList from "@/components/TeamList";
 import { clientConfig } from "@/config/client";
 import { requireClientPhone } from "@/lib/authz";
+import { listProjectFiles, toSummary } from "@/lib/project-files";
 import {
   calculateProgressPercent,
   getProjectsByPhone,
   recordProjectCheck,
 } from "@/lib/projects";
 import { buildWhatsAppUrl } from "@/lib/utils";
+import type { ProjectFileSummary } from "@/types/file";
 import type { ClientProjectStatus } from "@/types/project";
 
 /**
@@ -22,6 +25,21 @@ import type { ClientProjectStatus } from "@/types/project";
  * comes only from the session.
  */
 export const dynamic = "force-dynamic";
+
+/**
+ * Photos and documents are an extra: if they cannot be loaded (for instance the
+ * storage tables have not been created yet) the dashboard must still show the
+ * stages and the team, so a failure here means "no files", not "no dashboard".
+ */
+async function loadClientFiles(projectId: string): Promise<ProjectFileSummary[]> {
+  try {
+    const records = await listProjectFiles(projectId, { forClient: true });
+    return records.map(toSummary);
+  } catch (error) {
+    console.error("Failed to load project files:", error);
+    return [];
+  }
+}
 
 export default async function ClientDashboardPage() {
   const phone = await requireClientPhone();
@@ -35,17 +53,20 @@ export default async function ClientDashboardPage() {
   try {
     const records = await getProjectsByPhone(phone);
 
-    projects = records.map((project) => ({
-      clientName: project.clientName,
-      siteLocation: project.siteLocation,
-      areaSqFt: project.areaSqFt,
-      floors: project.floors,
-      startedOn: project.startedOn,
-      status: project.status,
-      stages: project.stages,
-      team: project.team ?? [],
-      progressPercent: calculateProgressPercent(project.stages),
-    }));
+    projects = await Promise.all(
+      records.map(async (project) => ({
+        clientName: project.clientName,
+        siteLocation: project.siteLocation,
+        areaSqFt: project.areaSqFt,
+        floors: project.floors,
+        startedOn: project.startedOn,
+        status: project.status,
+        stages: project.stages,
+        team: project.team ?? [],
+        files: await loadClientFiles(project.id),
+        progressPercent: calculateProgressPercent(project.stages),
+      }))
+    );
 
     // Best-effort: a logging failure must never break the dashboard.
     try {
@@ -129,6 +150,8 @@ export default async function ClientDashboardPage() {
             <div className="mt-4">
               <StageChecklist stages={project.stages} />
             </div>
+
+            <ClientFiles files={project.files} />
 
             {project.team.length > 0 && (
               <div className="mt-6 border-t border-stone-200 pt-5">

@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import ProjectFilesPanel from "@/components/ProjectFilesPanel";
 import StageChecklist from "@/components/StageChecklist";
 import StatusBadge from "@/components/StatusBadge";
 import TeamList from "@/components/TeamList";
@@ -360,6 +361,8 @@ export default function AdminProjectDetailPage() {
           {teamError && <p className="text-sm text-red-600">{teamError}</p>}
         </div>
       </div>
+
+      <ProjectFilesPanel projectId={project.id} />
 
       <div className="mt-6">
         <label htmlFor="notes" className="text-sm font-semibold text-stone-800">

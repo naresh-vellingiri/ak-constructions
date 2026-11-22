@@ -1,3 +1,5 @@
+import type { ProjectFileSummary } from "@/types/file";
+
 export type ConstructionStage = {
   key: string;
   label: string;
@@ -74,5 +76,7 @@ export type ClientProjectStatus = {
   status: ProjectStatus;
   stages: ConstructionStage[];
   team: ProjectTeamMember[];
+  /** Photos and documents the admin marked visible to the client. */
+  files: ProjectFileSummary[];
   progressPercent: number;
 };

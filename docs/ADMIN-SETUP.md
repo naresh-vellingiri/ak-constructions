@@ -96,6 +96,29 @@ revoke all on public.client_accounts from anon, authenticated;
 > Corollary: if a query fails, it is never RLS — service_role bypasses it. Look
 > for a quoted-column typo or a bad key instead.
 
+## Site photos and documents (optional add-on)
+
+Admins can attach site photos and documents (FMB sketch, site map, patta,
+approved plan) to a project; clients see them on their dashboard.
+
+1. Supabase **SQL Editor** -> paste and run `docs/sql/project-files.sql`. It
+   creates a **private** storage bucket (`project-files`, 15 MB limit, only
+   JPEG/PNG/WebP/PDF) and the `project_files` table.
+2. Nothing else to configure; it uses the same Supabase keys as the rest.
+
+Notes worth knowing:
+
+- Files go from the browser straight to Supabase Storage on a one-time signed
+  address, so large PDFs are not stopped by Vercel's 4.5 MB request limit.
+- Photos are shrunk to 1600 px in the browser before upload.
+- Nothing is public. The page only ever contains `/api/files/<id>`, which checks
+  the caller (admin, or the client who owns that project and the file is marked
+  visible) and then redirects to a link that expires in an hour.
+- Deleting a *project* row by hand in Supabase removes its file records but not
+  the stored files. Delete the project's photos in the admin first, or remove
+  the folder named after the project id from Storage -> project-files.
+- Free tier storage is 1 GB; shrunk photos are a few hundred KB each.
+
 ### Notes on the schema
 
 - **Quoted camelCase columns** are deliberate — they map 1:1 onto the
