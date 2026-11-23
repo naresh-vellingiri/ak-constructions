@@ -13,6 +13,8 @@
  * stripping metadata drops the EXIF orientation tag, so rotate the pixels.
  */
 
+import type { PortfolioCategory } from "@/types/portfolio";
+
 export type ProjectImage = {
   title: string;
   subtitle: string;
@@ -117,3 +119,18 @@ export const heroSlides = [
     alt: "Completed independent house by AK Constructions",
   },
 ];
+
+/**
+ * The built-in tiles above, in the shape the homepage uses. This is the
+ * fallback when the portfolio cannot be loaded from the database (not set up
+ * yet, or a Supabase outage), so the gallery never disappears from the site.
+ */
+export function staticPortfolio(): PortfolioCategory[] {
+  return galleryProjects.map((item, index) => ({
+    id: `static-${index}`,
+    title: item.title,
+    subtitle: item.subtitle,
+    cover: { src: item.src, alt: item.alt },
+    images: [{ id: `static-${index}-0`, src: item.src, caption: null }],
+  }));
+}

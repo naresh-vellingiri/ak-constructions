@@ -1,6 +1,9 @@
 import HomePage from "@/components/HomePage";
+import { staticPortfolio } from "@/content/projects";
 import { listPublishedPackages } from "@/lib/packages";
+import { listPortfolio } from "@/lib/portfolio";
 import type { PublicPackage } from "@/types/package";
+import type { PortfolioCategory } from "@/types/portfolio";
 
 /**
  * Cached and revalidated rather than dynamic. The homepage is the lead-generating
@@ -21,5 +24,15 @@ export default async function Home() {
     console.error("Failed to load packages for the homepage:", error);
   }
 
-  return <HomePage packages={packages} />;
+  // Same rule for the portfolio, with a better fallback than "nothing": the
+  // built-in tiles. They are also used while the table is still empty.
+  let portfolio: PortfolioCategory[] = [];
+  try {
+    portfolio = await listPortfolio();
+  } catch (error) {
+    console.error("Failed to load the portfolio for the homepage:", error);
+  }
+  if (portfolio.length === 0) portfolio = staticPortfolio();
+
+  return <HomePage packages={packages} portfolio={portfolio} />;
 }

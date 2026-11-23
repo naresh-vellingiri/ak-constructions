@@ -74,22 +74,18 @@ async function errorFrom(response: Response, fallback: string): Promise<string> 
   return fallback;
 }
 
-export type UploadOptions = {
-  projectId: string;
-  kind: FileKind;
-  file: File;
-  title?: string;
-  category?: DocumentCategory;
-  clientVisible: boolean;
-};
-
-/** Uploads one photo or document end to end and returns the saved record. */
-export async function uploadProjectFile(
-  options: UploadOptions
-): Promise<ProjectFileSummary> {
-  const { projectId, kind, file } = options;
-  const base = `/api/admin/projects/${encodeURIComponent(projectId)}/files`;
-
+/**
+ * The three-step upload shared by project files and portfolio photos.
+ * `base` is the API folder for the target (it must offer `<base>/upload-url`
+ * and accept a POST at `<base>`); `fields` are sent with the final step.
+ * Returns the JSON the final step answers with.
+ */
+async function runUpload<T>(
+  base: string,
+  kind: FileKind,
+  file: File,
+  fields: Record<string, unknown>
+): Promise<T> {
   let body: Blob = file;
   let mimeType = file.type;
 
@@ -139,17 +135,50 @@ export async function uploadProjectFile(
   const savedResponse = await fetch(base, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      path: slot.path,
-      kind,
-      category: options.category,
-      title: options.title,
-      clientVisible: options.clientVisible,
-    }),
+    body: JSON.stringify({ path: slot.path, kind, ...fields }),
   });
   if (!savedResponse.ok) {
     throw new UploadError(await errorFrom(savedResponse, "The file could not be saved."));
   }
-  const data = (await savedResponse.json()) as { file: ProjectFileSummary };
+  return (await savedResponse.json()) as T;
+}
+
+export type UploadOptions = {
+  projectId: string;
+  kind: FileKind;
+  file: File;
+  title?: string;
+  category?: DocumentCategory;
+  clientVisible: boolean;
+};
+
+/** Uploads one photo or document to a project and returns the saved record. */
+export async function uploadProjectFile(
+  options: UploadOptions
+): Promise<ProjectFileSummary> {
+  const data = await runUpload<{ file: ProjectFileSummary }>(
+    `/api/admin/projects/${encodeURIComponent(options.projectId)}/files`,
+    options.kind,
+    options.file,
+    {
+      category: options.category,
+      title: options.title,
+      clientVisible: options.clientVisible,
+    }
+  );
   return data.file;
+}
+
+/** Uploads one photo into a homepage portfolio category. */
+export async function uploadPortfolioPhoto(
+  categoryId: string,
+  file: File,
+  caption: string
+): Promise<void> {
+  await runUpload(
+    `/api/admin/portfolio/${encodeURIComponent(categoryId)}/photos`,
+    "photo",
+    file,
+    { caption }
+  );
 }

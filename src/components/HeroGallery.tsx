@@ -1,7 +1,15 @@
-import GalleryImage from "@/components/GalleryImage";
-import { galleryProjects } from "@/content/projects";
+import PortfolioGallery from "@/components/PortfolioGallery";
+import type { PortfolioCategory } from "@/types/portfolio";
 
-export default function HeroGallery() {
+type HeroGalleryProps = {
+  /** From the database, or the built-in tiles if it cannot be reached. */
+  categories: PortfolioCategory[];
+};
+
+export default function HeroGallery({ categories }: HeroGalleryProps) {
+  // A category with no pictures yet would be an empty grey box.
+  const shown = categories.filter((category) => category.images.length > 0);
+
   return (
     <section id="gallery" className="bg-stone-50 px-4 py-10 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -20,25 +28,7 @@ export default function HeroGallery() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-2 md:gap-5">
-          {galleryProjects.map((item) => (
-            <article
-              key={item.title}
-              className={`group relative min-h-[220px] overflow-hidden rounded-2xl bg-stone-200 ${item.className ?? ""}`}
-            >
-              <GalleryImage
-                src={item.src}
-                alt={item.alt}
-                className="object-cover transition duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-stone-900/0 transition group-hover:bg-stone-900/10" />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-stone-900/70 to-transparent p-5">
-                <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                <p className="text-sm text-stone-200">{item.subtitle}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+        <PortfolioGallery categories={shown} />
       </div>
     </section>
   );

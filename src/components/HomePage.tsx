@@ -16,6 +16,7 @@ import Testimonials from "@/components/Testimonials";
 import TrackerBanner from "@/components/TrackerBanner";
 import WhyUs from "@/components/WhyUs";
 import type { PublicPackage } from "@/types/package";
+import type { PortfolioCategory } from "@/types/portfolio";
 
 /**
  * Two popups, in order. The first automatic one is the full estimate form; every
@@ -40,9 +41,11 @@ const SUBMITTED_QUIET_MS = 30 * 24 * 60 * 60 * 1000;
 type HomePageProps = {
   /** Published packages, loaded server-side in app/page.tsx. */
   packages: PublicPackage[];
+  /** Portfolio tiles, loaded server-side in app/page.tsx. */
+  portfolio: PortfolioCategory[];
 };
 
-export default function HomePage({ packages }: HomePageProps) {
+export default function HomePage({ packages, portfolio }: HomePageProps) {
   const [popup, setPopup] = useState<Popup | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasSubmitted = useRef(false);
@@ -121,7 +124,7 @@ export default function HomePage({ packages }: HomePageProps) {
       <main>
         <Hero onGetQuote={openQuote} />
         <WhyUs onGetQuote={openQuote} />
-        <HeroGallery />
+        <HeroGallery categories={portfolio} />
         <Services />
         <Packages packages={packages} onGetQuote={openQuote} />
         <HowItWorks />
